@@ -45,6 +45,13 @@ locals {
 
   listener_template = {
     spec = {
+      containers = [{
+        name = "listener"
+        resources = {
+          requests = { cpu = "100m", memory = "128Mi" }
+          limits   = { cpu = "250m", memory = "256Mi" }
+        }
+      }]
       tolerations = [{
         key      = "CriticalAddonsOnly"
         operator = "Exists"
