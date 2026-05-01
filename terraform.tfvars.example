@@ -1,0 +1,20 @@
+region             = "us-east-1"
+cluster_name       = "valkey-ci"
+cluster_version    = "1.31"
+vpc_id             = "vpc-0123456789abcdef0"
+private_subnet_ids = ["subnet-aaa", "subnet-bbb", "subnet-ccc"]
+
+github_config_url          = "https://github.com/valkey-io/valkey"
+github_app_id              = "123456"
+github_app_installation_id = "12345678"
+github_app_private_key     = <<-EOT
+-----BEGIN RSA PRIVATE KEY-----
+<paste your GitHub App private key here>
+-----END RSA PRIVATE KEY-----
+EOT
+
+tags = {
+  Project     = "valkey-ci"
+  Environment = "production"
+  ManagedBy   = "terraform"
+}

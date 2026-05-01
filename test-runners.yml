@@ -1,0 +1,58 @@
+name: Test Self-Hosted Runners
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-x64:
+    runs-on: valkey-x64
+    steps:
+      - name: System info
+        run: |
+          echo "Arch: $(uname -m)"
+          echo "Memory: $(free -h | awk '/Mem:/{print $2}')"
+          echo "CPUs: $(nproc)"
+
+  test-x64-container:
+    runs-on: valkey-x64
+    container:
+      image: ubuntu:22.04
+    steps:
+      - name: System info
+        run: |
+          echo "Arch: $(uname -m)"
+          echo "Running inside container"
+          cat /etc/os-release | head -2
+
+  test-x64-largemem:
+    runs-on: valkey-x64-largemem
+    steps:
+      - name: System info
+        run: |
+          echo "Arch: $(uname -m)"
+          echo "Memory: $(free -h | awk '/Mem:/{print $2}')"
+          echo "CPUs: $(nproc)"
+      - name: Verify high memory
+        run: |
+          mem_gb=$(free -g | awk '/Mem:/{print $2}')
+          echo "Available memory: ${mem_gb}GB"
+          if [ "$mem_gb" -lt 16 ]; then
+            echo "ERROR: Expected >= 16GB, got ${mem_gb}GB"
+            exit 1
+          fi
+
+  test-arm64:
+    runs-on: valkey-arm64
+    steps:
+      - name: System info
+        run: |
+          echo "Arch: $(uname -m)"
+          echo "Memory: $(free -h | awk '/Mem:/{print $2}')"
+          echo "CPUs: $(nproc)"
+      - name: Verify ARM64
+        run: |
+          arch=$(uname -m)
+          if [ "$arch" != "aarch64" ]; then
+            echo "ERROR: Expected aarch64, got $arch"
+            exit 1
+          fi
