@@ -25,8 +25,50 @@ module "vpc" {
 
   private_subnet_tags = {
     "kubernetes.io/role/internal-elb" = 1
-    "karpenter.sh/discovery"          = var.cluster_name
   }
 
   tags = var.tags
+}
+
+# --- Secondary CIDR for Karpenter (large subnets for prefix delegation) ---
+
+resource "aws_vpc_ipv4_cidr_block_association" "secondary" {
+  vpc_id     = module.vpc.vpc_id
+  cidr_block = "100.64.0.0/16"
+}
+
+resource "aws_subnet" "karpenter" {
+  count = 2
+
+  vpc_id            = module.vpc.vpc_id
+  cidr_block        = cidrsubnet("100.64.0.0/16", 2, count.index) # /18 subnets
+  availability_zone = module.vpc.azs[count.index]
+
+  tags = merge(var.tags, {
+    Name                     = "${var.cluster_name}-karpenter-${module.vpc.azs[count.index]}"
+    "karpenter.sh/discovery" = var.cluster_name
+  })
+
+  depends_on = [aws_vpc_ipv4_cidr_block_association.secondary]
+}
+
+resource "aws_route_table" "karpenter" {
+  vpc_id = module.vpc.vpc_id
+
+  tags = merge(var.tags, {
+    Name = "${var.cluster_name}-karpenter"
+  })
+}
+
+resource "aws_route" "karpenter_nat" {
+  route_table_id         = aws_route_table.karpenter.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = module.vpc.natgw_ids[0]
+}
+
+resource "aws_route_table_association" "karpenter" {
+  count = 2
+
+  subnet_id      = aws_subnet.karpenter[count.index].id
+  route_table_id = aws_route_table.karpenter.id
 }
