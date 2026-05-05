@@ -12,8 +12,8 @@ module "eks" {
   enable_cluster_creator_admin_permissions = true
 
   cluster_addons = {
-    coredns                = {}
-    kube-proxy             = {}
+    coredns    = {}
+    kube-proxy = {}
     vpc-cni = {
       most_recent = true
       configuration_values = jsonencode({
