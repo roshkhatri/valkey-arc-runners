@@ -14,7 +14,7 @@ module "vpc" {
   private_subnets = ["10.0.10.0/24", "10.0.11.0/24"]
 
   enable_nat_gateway = true
-  single_nat_gateway = true
+  single_nat_gateway = false
 
   enable_dns_hostnames = true
   enable_dns_support   = true
@@ -53,22 +53,26 @@ resource "aws_subnet" "karpenter" {
 }
 
 resource "aws_route_table" "karpenter" {
+  count = 2
+
   vpc_id = module.vpc.vpc_id
 
   tags = merge(var.tags, {
-    Name = "${var.cluster_name}-karpenter"
+    Name = "${var.cluster_name}-karpenter-${module.vpc.azs[count.index]}"
   })
 }
 
 resource "aws_route" "karpenter_nat" {
-  route_table_id         = aws_route_table.karpenter.id
+  count = 2
+
+  route_table_id         = aws_route_table.karpenter[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = module.vpc.natgw_ids[0]
+  nat_gateway_id         = module.vpc.natgw_ids[count.index]
 }
 
 resource "aws_route_table_association" "karpenter" {
   count = 2
 
   subnet_id      = aws_subnet.karpenter[count.index].id
-  route_table_id = aws_route_table.karpenter.id
+  route_table_id = aws_route_table.karpenter[count.index].id
 }

@@ -73,10 +73,10 @@ resource "kubectl_manifest" "nodepool_x64" {
           ]
         }
       }
-      limits = { cpu = "3200", memory = "6400Gi" }
+      limits = { cpu = "6400", memory = "12800Gi" }
       disruption = {
         consolidationPolicy = "WhenEmpty"
-        consolidateAfter    = "60s"
+        consolidateAfter    = "120s"
       }
     }
   })
@@ -109,10 +109,10 @@ resource "kubectl_manifest" "nodepool_x64_largemem" {
           ]
         }
       }
-      limits = { cpu = "128", memory = "512Gi" }
+      limits = { cpu = "6400", memory = "12800Gi" }
       disruption = {
         consolidationPolicy = "WhenEmpty"
-        consolidateAfter    = "300s"
+        consolidateAfter    = "120s"
       }
     }
   })
@@ -145,10 +145,10 @@ resource "kubectl_manifest" "nodepool_arm64" {
           ]
         }
       }
-      limits = { cpu = "16", memory = "64Gi" }
+      limits = { cpu = "6400", memory = "12800Gi" }
       disruption = {
         consolidationPolicy = "WhenEmpty"
-        consolidateAfter    = "Never"
+        consolidateAfter    = "120s"
       }
     }
   })
