@@ -14,14 +14,22 @@ module "eks" {
   cluster_addons = {
     coredns                = {}
     kube-proxy             = {}
-    vpc-cni                = {}
+    vpc-cni = {
+      most_recent = true
+      configuration_values = jsonencode({
+        env = {
+          ENABLE_PREFIX_DELEGATION = "true"
+          WARM_PREFIX_TARGET       = "1"
+        }
+      })
+    }
     eks-pod-identity-agent = {}
   }
 
   eks_managed_node_groups = {
     system = {
       ami_type       = "AL2023_ARM_64_STANDARD"
-      instance_types = ["t4g.small"]
+      instance_types = ["t4g.medium"]
       capacity_type  = "ON_DEMAND"
       min_size       = 2
       max_size       = 4

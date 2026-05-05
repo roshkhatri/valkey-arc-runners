@@ -73,9 +73,9 @@ resource "kubectl_manifest" "nodepool_x64" {
           ]
         }
       }
-      limits = { cpu = "400", memory = "800Gi" }
+      limits = { cpu = "3200", memory = "6400Gi" }
       disruption = {
-        consolidationPolicy = "WhenEmptyOrUnderutilized"
+        consolidationPolicy = "WhenEmpty"
         consolidateAfter    = "60s"
       }
     }
