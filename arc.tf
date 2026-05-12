@@ -86,7 +86,7 @@ resource "helm_release" "runner_x64" {
         containers = [{
           name            = "runner"
           image           = "ghcr.io/actions/actions-runner:latest"
-          command         = ["/bin/bash", "-c", "echo 'root ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null; sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list 2>/dev/null; /home/runner/run.sh"]
+          command         = ["/bin/bash", "-c", "echo 'root ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null; sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list 2>/dev/null; ln -sf /usr/bin/python3 /usr/bin/python; apt-get update -qq && apt-get install -y -qq python3-pip > /dev/null 2>&1; ln -sf /usr/bin/pip3 /usr/bin/pip; /home/runner/run.sh"]
           securityContext = { runAsUser = 0 }
           env             = [{ name = "RUNNER_ALLOW_RUNASROOT", value = "1" }]
           resources       = { requests = { cpu = "4", memory = "16Gi" } }
@@ -116,7 +116,7 @@ resource "helm_release" "runner_x64_largemem" {
         containers = [{
           name            = "runner"
           image           = "ghcr.io/actions/actions-runner:latest"
-          command         = ["/bin/bash", "-c", "echo 'root ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null; sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list 2>/dev/null; /home/runner/run.sh"]
+          command         = ["/bin/bash", "-c", "echo 'root ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null; sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list 2>/dev/null; ln -sf /usr/bin/python3 /usr/bin/python; apt-get update -qq && apt-get install -y -qq python3-pip > /dev/null 2>&1; ln -sf /usr/bin/pip3 /usr/bin/pip; /home/runner/run.sh"]
           securityContext = { runAsUser = 0 }
           env             = [{ name = "RUNNER_ALLOW_RUNASROOT", value = "1" }]
           resources       = { requests = { cpu = "8", memory = "32Gi" } }
@@ -146,7 +146,7 @@ resource "helm_release" "runner_arm64" {
         containers = [{
           name            = "runner"
           image           = "ghcr.io/actions/actions-runner:latest"
-          command         = ["/bin/bash", "-c", "echo 'root ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null; sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list 2>/dev/null; /home/runner/run.sh"]
+          command         = ["/bin/bash", "-c", "echo 'root ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers && sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list.d/ubuntu.sources 2>/dev/null; sed -i 's|http://archive.ubuntu.com|https://archive.ubuntu.com|g; s|http://security.ubuntu.com|https://security.ubuntu.com|g' /etc/apt/sources.list 2>/dev/null; ln -sf /usr/bin/python3 /usr/bin/python; apt-get update -qq && apt-get install -y -qq python3-pip > /dev/null 2>&1; ln -sf /usr/bin/pip3 /usr/bin/pip; /home/runner/run.sh"]
           securityContext = { runAsUser = 0 }
           env             = [{ name = "RUNNER_ALLOW_RUNASROOT", value = "1" }]
           resources       = { requests = { cpu = "4", memory = "16Gi" } }
